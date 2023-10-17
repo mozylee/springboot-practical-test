@@ -2,10 +2,12 @@ package practice.practicaltest.spring.api.service.product.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import practice.practicaltest.spring.domain.product.Product;
 import practice.practicaltest.spring.domain.product.ProductSellingType;
 import practice.practicaltest.spring.domain.product.ProductType;
 
+@ToString
 @Getter
 public class SellingProductResponse {
 
