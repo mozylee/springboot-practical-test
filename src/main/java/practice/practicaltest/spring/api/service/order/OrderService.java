@@ -44,11 +44,9 @@ public class OrderService {
         Map<String, Product> productMap = products.stream()
                                                   .collect(Collectors.toMap(Product::getProductNumber, p -> p));
 
-        List<Product> duplicatedProducts = productNumbers.stream()
-                                                         .map(productMap::get)
-                                                         .toList();
-
-        return duplicatedProducts;
+        return productNumbers.stream()
+                             .map(productMap::get)
+                             .toList();
     }
 
     private void deductStockQuantities(List<Product> products) {
