@@ -28,31 +28,12 @@ class ProductRepositoryTest {
     @DisplayName("원하는 판매 상태를 가진 상품들을 조회한다.")
     public void findAllBySellingStatusIn() throws Exception {
         // given
-        List<Product> sellingProducts = List.of(Product.builder()
-                                                       .productType(HANDMADE)
-                                                       .productSellingType(SELLING)
-                                                       .name("아메리카노")
-                                                       .build(),
-                                                Product.builder()
-                                                       .productType(BOTTLED)
-                                                       .productSellingType(SELLING)
-                                                       .name("라떼")
-                                                       .build());
-        List<Product> holdProducts = List.of(Product.builder()
-                                                    .productType(HANDMADE)
-                                                    .productSellingType(HOLD)
-                                                    .name("콜드 브루")
-                                                    .build());
-        List<Product> stopSellingProducts = List.of(Product.builder()
-                                                           .productType(BAKERY)
-                                                           .productSellingType(STOP_SELLING)
-                                                           .name("감자빵")
-                                                           .build(),
-                                                    Product.builder()
-                                                           .productType(HANDMADE)
-                                                           .productSellingType(STOP_SELLING)
-                                                           .name("달고나 라떼")
-                                                           .build());
+        List<Product> sellingProducts = List.of(createProduct("001", HANDMADE, SELLING, "아메리카노"),
+                                                createProduct("002", BOTTLED, SELLING, "라떼"));
+        List<Product> holdProducts = List.of(createProduct("003", HANDMADE, HOLD, "콜드 브루"));
+        List<Product> stopSellingProducts = List.of(createProduct("004", BAKERY, STOP_SELLING, "감자빵"),
+                                                    createProduct("005", HANDMADE, STOP_SELLING, "달고나 라떼"));
+
         productRepository.saveAll(Stream.of(sellingProducts, holdProducts, stopSellingProducts)
                                         .flatMap(List::stream)
                                         .toList());
@@ -75,24 +56,9 @@ class ProductRepositoryTest {
     @DisplayName("원하는 상품 번호를 가진 상품들을 조회한다.")
     void findAllByProductNumberIn() {
         // given
-        List<Product> sellingProducts = List.of(Product.builder()
-                                                       .productNumber("001")
-                                                       .productType(HANDMADE)
-                                                       .productSellingType(SELLING)
-                                                       .name("아메리카노")
-                                                       .build(),
-                                                Product.builder()
-                                                       .productNumber("002")
-                                                       .productType(BOTTLED)
-                                                       .productSellingType(SELLING)
-                                                       .name("라떼")
-                                                       .build(),
-                                                Product.builder()
-                                                       .productNumber("003")
-                                                       .productType(BAKERY)
-                                                       .productSellingType(SELLING)
-                                                       .name("라떼")
-                                                       .build());
+        List<Product> sellingProducts = List.of(createProduct("001", HANDMADE, SELLING, "아메리카노"),
+                                                createProduct("002", BOTTLED, SELLING, "라떼"),
+                                                createProduct("003", BAKERY, SELLING, "라떼"));
         productRepository.saveAll(sellingProducts);
 
         List<Product> foundProducts = sellingProducts.stream()
@@ -113,6 +79,45 @@ class ProductRepositoryTest {
                                                                                                     product.getProductType(),
                                                                                                     product.getProductSellingType()))
                                                                               .toList());
+    }
+
+    @Test
+    @DisplayName("최근 마지막으로 저장한 상품의 상품 번호를 읽어온다.")
+    void findLatestProductNumber() {
+        // given
+        String givenProductNumber = "003";
+
+        List<Product> sellingProducts = List.of(createProduct("001", HANDMADE, SELLING, "아메리카노"),
+                                                createProduct("002", BOTTLED, SELLING, "라떼"),
+                                                createProduct(givenProductNumber, BAKERY, SELLING, "라떼"));
+        productRepository.saveAll(sellingProducts);
+
+        // when
+        String latestProductNumber = productRepository.findLatestProductNumber();
+
+        // then
+        assertThat(latestProductNumber).isEqualTo(givenProductNumber);
+    }
+
+    @Test
+    @DisplayName("최근 마지막으로 저장한 상품이 없는 경우, 상품 번호는 null을 반환한다.")
+    void findLatestProductNumberWhenEmptyIsNull() {
+        // given
+
+        // when
+        String latestProductNumber = productRepository.findLatestProductNumber();
+
+        // then
+        assertThat(latestProductNumber).isNull();
+    }
+
+    private static Product createProduct(String productNumber, ProductType productType, ProductSellingType productSellingType, String name) {
+        return Product.builder()
+                      .productNumber(productNumber)
+                      .productType(productType)
+                      .productSellingType(productSellingType)
+                      .name(name)
+                      .build();
     }
 
 }
