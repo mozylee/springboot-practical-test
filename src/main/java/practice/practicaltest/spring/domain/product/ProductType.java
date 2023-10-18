@@ -1,5 +1,6 @@
 package practice.practicaltest.spring.domain.product;
 
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -14,5 +15,10 @@ public enum ProductType {
     BAKERY("베이커리");
 
     private final String description;
+
+    public static boolean containsStockType(ProductType productType) {
+        return Set.of(BOTTLED, BAKERY)
+                  .contains(productType);
+    }
 
 }
