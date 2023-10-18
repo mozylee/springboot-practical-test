@@ -2,7 +2,6 @@ package practice.practicaltest.spring.domain.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.junit.jupiter.api.Assertions.*;
 import static practice.practicaltest.spring.domain.product.ProductSellingType.HOLD;
 import static practice.practicaltest.spring.domain.product.ProductSellingType.SELLING;
 import static practice.practicaltest.spring.domain.product.ProductSellingType.STOP_SELLING;
@@ -11,20 +10,15 @@ import static practice.practicaltest.spring.domain.product.ProductType.BOTTLED;
 import static practice.practicaltest.spring.domain.product.ProductType.HANDMADE;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.assertj.core.groups.Tuple;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
-@Transactional
-@SpringBootTest
+@DataJpaTest
 class ProductRepositoryTest {
 
     @Autowired
