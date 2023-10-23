@@ -54,6 +54,10 @@ public class Order extends BaseEntity {
                                       .getPrice();
     }
 
+    public void updateOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     @Builder
     private Order(OrderStatus orderStatus, int totalPrice, LocalDateTime orderDateTime, List<OrderProduct> orderProducts) {
         this.orderStatus = orderStatus;
@@ -76,14 +80,6 @@ public class Order extends BaseEntity {
 
     public static Order create(List<Product> products, LocalDateTime orderDateTime) {
         return new Order(products, orderDateTime);
-    }
-
-    public static Order create(LocalDateTime orderDateTime) {
-        return Order.builder()
-                    .orderStatus(OrderStatus.CREATED)
-                    .orderDateTime(orderDateTime)
-                    .orderProducts(new ArrayList<>())
-                    .build();
     }
 
     private int calculateTotalPrice(List<Product> products) {
